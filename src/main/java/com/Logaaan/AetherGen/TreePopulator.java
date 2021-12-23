@@ -18,14 +18,15 @@ import org.bukkit.material.Leaves;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import com.sk89q.worldedit.CuboidClipboard;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
-import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.data.DataException;
-import com.sk89q.worldedit.schematic.SchematicFormat;
 
 public class TreePopulator extends BlockPopulator {
 	
@@ -452,22 +453,22 @@ public class TreePopulator extends BlockPopulator {
 	public void paste(World w, int x, int y, int z, String f) {
 		Location loc = new Location(w,x,y,z);
 		File file = new File(p.getDataFolder()+"/schematics/prefab_"+f+".schematic");
-		Vector v = new Vector(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()); // loc is your location variable
+		BlockVector3 v = BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()); // loc is your location variable
 		EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession((com.sk89q.worldedit.world.World) new BukkitWorld(loc.getWorld()), WorldEdit.getInstance().getConfiguration().maxChangeLimit);
-		SchematicFormat format = SchematicFormat.getFormat(file);
-		CuboidClipboard cc = null;
+		ClipboardFormat format = ClipboardFormats.findByFile(file);
 		try {
-			cc = format.load(file);
-		} catch (DataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ClipboardReader reader = format.getReader(new FileInputStream(file));
+			Clipboard cc = reader.read();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			cc.rotate2D(new Random().nextInt(360));
-			cc.paste(es, v, true);
+			ClipboardHolder holder = new ClipboardHolder(cc);
+			AffineTransform transform = new AffineTransform();
+			transform = transform.rotateY(new Random().nextInt(360));
+			holder.setTransform(transform);
+			Operation op = holder.createPaste(es).to(v).build();
 		} catch (MaxChangedBlocksException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
