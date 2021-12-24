@@ -1,0 +1,6 @@
+main: me.Logaaan.wg.Main
+name: WorldGen
+version: 1.0
+author: Logaaan
+api-version: 1.18
+load: STARTUP
