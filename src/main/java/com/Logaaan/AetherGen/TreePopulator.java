@@ -479,19 +479,17 @@ public class TreePopulator extends BlockPopulator {
 		EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession((com.sk89q.worldedit.world.World) new BukkitWorld(loc.getWorld()), WorldEdit.getInstance().getConfiguration().maxChangeLimit);
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
 		Clipboard cc = null;
-		//try {
+		try {
 			ClipboardReader reader = format.getReader(new FileInputStream(file));
 			cc = reader.read();
-		//} catch (IOException e) {
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		//}
-		//try {
-			ClipboardHolder holder = new ClipboardHolder(cc);
-			AffineTransform transform = new AffineTransform();
-			transform = transform.rotateY(new Random().nextInt(360));
-			holder.setTransform(transform);
-			Operation op = holder.createPaste(es).to(v).build();
-		//}
+		}
+		ClipboardHolder holder = new ClipboardHolder(cc);
+		AffineTransform transform = new AffineTransform();
+		transform = transform.rotateY(new Random().nextInt(360));
+		holder.setTransform(transform);
+		Operation op = holder.createPaste(es).to(v).build();
 	}
 }
