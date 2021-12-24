@@ -11,6 +11,8 @@ import org.bukkit.generator.BlockPopulator;
  * author: Angelic47
  * Nukkit Project
  */
+
+/*
 public class PopulatorCaves2 extends BlockPopulator {
 
     protected int checkAreaSize = 8;
@@ -275,3 +277,4 @@ public class PopulatorCaves2 extends BlockPopulator {
     }
 }
 
+*/
