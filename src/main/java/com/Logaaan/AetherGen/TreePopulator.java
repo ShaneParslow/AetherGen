@@ -1,6 +1,7 @@
 package me.Logaaan.wg;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Random;
 
@@ -10,6 +11,8 @@ import org.bukkit.Material;
 import org.bukkit.TreeType;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.type.Snow;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Chest;
 import org.bukkit.generator.BlockPopulator;
@@ -20,13 +23,16 @@ import org.bukkit.util.noise.SimplexOctaveGenerator;
 
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.transform.AffineTransform;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.function.operation.Operation;
 
 public class TreePopulator extends BlockPopulator {
 	
@@ -57,7 +63,7 @@ public class TreePopulator extends BlockPopulator {
 						}
 					}
 					for (int y = world.getHighestBlockYAt(xx,zz) + 1; y > 1; y--) {
-						if (chunk.getBlock(x, y, z).getType().equals(Material.MYCEL)) {
+						if (chunk.getBlock(x, y, z).getType().equals(Material.MYCELIUM)) {
 							if (new Random().nextInt(40) == 21) {
 								world.generateTree(new Location(world,xx,y+1,zz), new Random().nextBoolean() ? TreeType.RED_MUSHROOM : TreeType.BROWN_MUSHROOM);
 							}
@@ -75,7 +81,8 @@ public class TreePopulator extends BlockPopulator {
 							}
 							if (stopwater == false) {
 								if (new Random().nextInt(3) == 1) {
-									chunk.getBlock(x , y+1, z).setTypeIdAndData(Material.LONG_GRASS.getId(), (byte) 1, false);
+									// Was GRASS data 0x1; fern?
+									chunk.getBlock(x , y+1, z).setType(Material.FERN);
 								}
 								if (world.getBiome(xx,zz).equals(Biome.SNOWY_PLAINS)) {
 									if (new Random().nextInt(p.treechance + 20) == 21) {
@@ -83,7 +90,12 @@ public class TreePopulator extends BlockPopulator {
 										int pine = new Random().nextInt(p.pinecount-1)+1;
 										paste(world,xx,y,zz,"pine"+pine);
 									}
-									chunk.getBlock(x , y+1, z).setTypeIdAndData(Material.SNOW.getId(), (byte) new Random().nextInt(4), false);
+									BlockState state = chunk.getBlock(x , y+1, z).getState();
+									state.setType(Material.SNOW);
+									Snow data = (Snow) Material.SNOW.createBlockData();
+									data.setLayers(new Random().nextInt(4));
+									state.setBlockData(data);
+									state.update();
 								}
 								if (world.getBiome(xx,zz).equals(Biome.OCEAN) || world.getBiome(xx,zz).equals(Biome.DEEP_OCEAN)) {
 									if (new Random().nextInt(p.treechance + 20) == 21) {
@@ -243,15 +255,18 @@ public class TreePopulator extends BlockPopulator {
 									}
 								}
 								
+								// TODO: Still need to add new flowers
 								if (world.getBiome(xx,zz).equals(Biome.PLAINS) || world.getBiome(xx,zz).equals(Biome.SUNFLOWER_PLAINS)) {
 									if (new Random().nextInt(3) == 2) {
-										chunk.getBlock(x, y+1, z).setTypeId(new Random().nextBoolean() ? Material.YELLOW_FLOWER.getId() :  Material.RED_ROSE.getId());
+										// This method just absolutely does not work anymore
+										// chunk.getBlock(x, y+1, z).setTypeId(new Random().nextBoolean() ? Material.SUNFLOWER.getId() :  Material.POPPY.getId());
+										chunk.getBlock(x, y+1, z).setType(Material.SUNFLOWER);
 									}
 									if (new Random().nextInt(500) == 324) {
-										chunk.getBlock(x, y+1, z).setTypeId(Material.PUMPKIN.getId());
+										chunk.getBlock(x, y+1, z).setType(Material.PUMPKIN);
 									}
 									if (new Random().nextInt(100) == 20) {
-										chunk.getBlock(x, y+1, z).setTypeId(Material.BROWN_MUSHROOM.getId());
+										chunk.getBlock(x, y+1, z).setType(Material.BROWN_MUSHROOM);
 									}
 									if (new Random().nextInt(400) == 11) {
 										chunk.getBlock(x, y + 1, z).setType(Material.STONE);
@@ -270,11 +285,16 @@ public class TreePopulator extends BlockPopulator {
 									if (p.aether && p.goodies) {
 									if (p.ah <= y) {
 										if (new Random().nextInt(1200) == 271) {
-											chunk.getBlock(x, y+1, z).setTypeId(Material.CHEST.getId());
-											Chest c = (Chest) chunk.getBlock(x, y+1, z).getState();
+											// This might not be the best way to set type and data. At least it's atomic? via BlockState.
+											BlockState newblock = chunk.getBlock(x, y+1, z).getState();
+											newblock.setType(Material.CHEST);
+											Chest c = (Chest) newblock.getBlockData();
 											for (int i = 1; i  < new Random().nextInt(6); i++) {
 												int rr = new Random().nextInt(428);
-												c.getBlockInventory().addItem(new ItemStack(Material.getMaterial(rr)));
+												// TODO: Randomly select from actual items instead of materials, and mabybe go by normal loot tables.
+												// org.bukkit.loot.LootTable?
+												//c.getBlockInventory().addItem(new ItemStack(Material.getMaterial(rr)));
+											// Still have to commit BlockState and BlockData
 											}
 										}
 									}
@@ -382,7 +402,8 @@ public class TreePopulator extends BlockPopulator {
 						if (stopwater == true) {
 							if (y <= 45) {
 								stopc = 0;
-								chunk.getBlock(x, y, z).setType(Material.STATIONARY_LAVA);
+								// this might not be right, used to be STATIONARY_LAVA
+								chunk.getBlock(x, y, z).setType(Material.LAVA);
 							}
 						}
 					}
@@ -424,7 +445,8 @@ public class TreePopulator extends BlockPopulator {
 				if (w.getBlockAt(new Location(w,x,y-1,z+i)).getType().equals(Material.AIR)) {
 					break;
 				} else {
-					w.getBlockAt(new Location(w,x,y,z+i)).setType(Material.LOG);
+					// TODO: add new log types
+					w.getBlockAt(new Location(w,x,y,z+i)).setType(Material.OAK_LOG);
 					if (shroom) {
 						if (new Random().nextInt(5) == 3) {
 							w.getBlockAt(new Location(w,x,y,z+i)).setType(new Random().nextBoolean() ? Material.BROWN_MUSHROOM : Material.RED_MUSHROOM);
@@ -439,7 +461,7 @@ public class TreePopulator extends BlockPopulator {
 				if (w.getBlockAt(new Location(w,x+i,y-1,z)).getType().equals(Material.AIR)) {
 					break;
 				} else {
-					w.getBlockAt(new Location(w,x+i,y,z)).setType(Material.LOG);
+					w.getBlockAt(new Location(w,x+i,y,z)).setType(Material.OAK_LOG);
 					if (shroom) {
 						if (new Random().nextInt(5) == 3) {
 							w.getBlockAt(new Location(w,x+1,y,z)).setType(new Random().nextBoolean() ? Material.BROWN_MUSHROOM : Material.RED_MUSHROOM);
@@ -456,23 +478,20 @@ public class TreePopulator extends BlockPopulator {
 		BlockVector3 v = BlockVector3.at(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()); // loc is your location variable
 		EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession((com.sk89q.worldedit.world.World) new BukkitWorld(loc.getWorld()), WorldEdit.getInstance().getConfiguration().maxChangeLimit);
 		ClipboardFormat format = ClipboardFormats.findByFile(file);
-		try {
+		Clipboard cc = null;
+		//try {
 			ClipboardReader reader = format.getReader(new FileInputStream(file));
-			Clipboard cc = reader.read();
-		} catch (IOException e) {
+			cc = reader.read();
+		//} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		try {
+		//}
+		//try {
 			ClipboardHolder holder = new ClipboardHolder(cc);
 			AffineTransform transform = new AffineTransform();
 			transform = transform.rotateY(new Random().nextInt(360));
 			holder.setTransform(transform);
 			Operation op = holder.createPaste(es).to(v).build();
-		} catch (MaxChangedBlocksException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//}
 	}
-
 }
