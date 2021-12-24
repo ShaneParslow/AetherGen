@@ -1,4 +1,4 @@
-package me.Logaaan.wg;
+package com.Logaaan.AetherGen;
 
 import java.util.ArrayList;
 import java.util.List;

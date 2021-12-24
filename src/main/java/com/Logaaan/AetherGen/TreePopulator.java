@@ -1,4 +1,4 @@
-package me.Logaaan.wg;
+package com.Logaaan.AetherGen;
 
 import java.io.File;
 import java.io.FileInputStream;
