@@ -68,6 +68,7 @@ public class CustomGen extends ChunkGenerator {
                     currentHeight = (int) (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) * 7D + p.ah);
                     for (int y = currentHeight; y > p.ah - (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) * 7D - 13D); y--) {
                         if (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) > p.sp) {
+                            // On top block
                             if (y == currentHeight) {
                                 if (world.getBiome(chunkX * 16 + xl, chunkZ * 16 + xz).equals(Biome.DESERT)) {
                                     chunk.setBlock(X, y, Z, Material.SAND);
@@ -76,10 +77,11 @@ public class CustomGen extends ChunkGenerator {
 
                                 }
                             } else {
+                                // On second to top block
                                 if (y == currentHeight - 1) {
                                     chunk.setBlock(X, y, Z, Material.DIRT);
 
-
+                                // On some other block, for loop ensures within sane y limits
                                 } else {
                                     chunk.setBlock(X, y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
 
