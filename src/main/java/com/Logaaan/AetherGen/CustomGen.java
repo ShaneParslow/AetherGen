@@ -8,7 +8,7 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -37,7 +37,7 @@ public class CustomGen extends ChunkGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
-        return Arrays.asList();
+        return Collections.emptyList();
     }
 
     @Override
