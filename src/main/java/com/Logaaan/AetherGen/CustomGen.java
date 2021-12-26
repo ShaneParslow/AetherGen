@@ -46,80 +46,46 @@ public class CustomGen extends ChunkGenerator {
             init(world);
         }
 
-        int baseX = chunkX >> 4;
-        int baseZ = chunkZ >> 4;
+        // World coordinate of the 0,0 block in the chunk being generated
+        int worldBaseX = chunkX * 16;
+        int worldBaseZ = chunkZ * 16;
+
         ChunkData chunk = createChunkData(world);
-        double bm = 1;
-        Material coverBlock = Material.GRASS;
+
         if (world.getEnvironment().equals(Environment.NORMAL)) {
-            //if (chunkX == 0) {
             for (int X = 0; X < 16; X++) {
                 for (int Z = 0; Z < 16; Z++) {
-                    int rx = chunkX * 16 + X;
-                    int rz = chunkZ * 16 + Z;
-                    int cr = 0;
+                    // World coordinate of current block
+                    int worldX = worldBaseX + X;
+                    int worldZ = worldBaseZ + Z;
 
-                    Biome b = world.getBiome(rx, rz);
+                    Biome b = world.getBiome(worldX, worldZ);
 
-                    final int xl = X;
-                    final int xz = Z;
-                    //if (generator_float.noise(chunkX*16+X, chunkZ*16+Z, 1.4D, 0.95D) > 0) {
+                    double noise = generator_float.noise(worldX, worldZ, p.f, p.a);
+                    currentHeight = (int) (noise * 7D + p.ah);
 
-                    currentHeight = (int) (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) * 7D + p.ah);
-                    for (int y = currentHeight; y > p.ah - (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) * 7D - 13D); y--) {
-                        if (generator_float.noise(chunkX * 16 + xl | chunkZ * 8 + chunkX * 8 + X | baseX + X, chunkZ * 16 + xz | chunkZ * 8 + chunkX * 8 + Z | baseZ + Z, p.f, p.a) > p.sp) {
+                    for (int Y = currentHeight; Y > p.ah - (noise * 7D - 13D); Y--) {
+                        if (noise > p.sp) {
                             // On top block
-                            if (y == currentHeight) {
-                                if (world.getBiome(chunkX * 16 + xl, chunkZ * 16 + xz).equals(Biome.DESERT)) {
-                                    chunk.setBlock(X, y, Z, Material.SAND);
+                            if (Y == currentHeight) {
+                                if (world.getBiome(worldX, worldZ).equals(Biome.DESERT)) {
+                                    chunk.setBlock(X, Y, Z, Material.SAND);
                                 } else {
-                                    chunk.setBlock(X, y, Z, Material.GRASS);
+                                    chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
 
                                 }
+                            // On second to top block
+                            } else if (Y == currentHeight - 1) {
+                                chunk.setBlock(X, Y, Z, Material.DIRT);
+                            // On some other block, for loop ensures within sane y limits
                             } else {
-                                // On second to top block
-                                if (y == currentHeight - 1) {
-                                    chunk.setBlock(X, y, Z, Material.DIRT);
-
-                                // On some other block, for loop ensures within sane y limits
-                                } else {
-                                    chunk.setBlock(X, y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
-
-                                }
-                            }
-
-
-                        }
-                    }
-
-
-                    if (p.aether2 == true) {
-                        currentHeight = (int) (generator_float_2.noise(chunkX * 16 + X, chunkZ * 16 + Z, p.f2, p.a2) * 7D + p.ah2);
-                        for (int y = currentHeight; y > p.ah2 - (generator_float_2.noise(chunkX * 16 + X, chunkZ * 16 + Z, p.f2, p.a2) * 7D - 13D); y--) {
-                            if (generator_float_2.noise(chunkX * 16 + X, chunkZ * 16 + Z, p.f2, p.a2) > p.sp2) {
-                                if (y == currentHeight) {
-                                    if (world.getBiome(chunkX * 16 + X, chunkZ * 16 + Z).equals(Biome.DESERT)) {
-                                        chunk.setBlock(X, y, Z, Material.SAND);
-                                    } else {
-                                        chunk.setBlock(X, y, Z, Material.GRASS);
-                                    }
-                                } else {
-                                    if (y == currentHeight - 1) {
-                                        chunk.setBlock(X, y, Z, Material.DIRT);
-
-                                    } else {
-                                        chunk.setBlock(X, y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
-                                    }
-                                }
+                                chunk.setBlock(X, Y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
                             }
                         }
                     }
                 }
             }
         }
-
-        //  }
-
 
         if (world.getEnvironment().equals(Environment.NETHER)) {
             if (chunkX % 1 == 0 && chunkZ % 1 == 0) {
