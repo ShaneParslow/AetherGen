@@ -15,9 +15,7 @@ import java.util.Random;
 public class CustomGen extends ChunkGenerator {
     public Main p;
     public String wn;
-    int currentHeight = 50;
     SimplexOctaveGenerator generator_float;
-    SimplexOctaveGenerator generator_float_2;
     private boolean i = false;
 
     public CustomGen(String wn, Main m) {
@@ -27,11 +25,7 @@ public class CustomGen extends ChunkGenerator {
 
     private void init(World world) {
         generator_float = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao);
-        //generator_float.setScale(p.sa);
         generator_float.setScale(0.005);
-
-        generator_float_2 = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao2);
-        generator_float_2.setScale(p.sa2);
         i = true;
     }
 
@@ -53,55 +47,37 @@ public class CustomGen extends ChunkGenerator {
 
         ChunkData chunk = createChunkData(world);
 
-        if (world.getEnvironment().equals(Environment.NORMAL)) {
-            for (int X = 0; X < 16; X++) {
-                for (int Z = 0; Z < 16; Z++) {
-                    // World coordinate of current block
-                    int worldX = worldBaseX + X;
-                    int worldZ = worldBaseZ + Z;
+        for (int X = 0; X < 16; X++) {
+            for (int Z = 0; Z < 16; Z++) {
+                // World coordinate of current block
+                int worldX = worldBaseX + X;
+                int worldZ = worldBaseZ + Z;
 
-                    Biome b = world.getBiome(worldX, worldZ);
+                Biome b = world.getBiome(worldX, worldZ);
 
-                    double noise = generator_float.noise(worldX, worldZ, p.f, p.a);
-                    currentHeight = (int) (noise * 7D + p.ah);
+                double noise = generator_float.noise(worldX, worldZ, p.f, p.a);
+                int currentHeight = (int) (noise * 7D + p.ah);
 
-                    for (int Y = currentHeight; Y > p.ah - (noise * 7D - 13D); Y--) {
-                        if (noise > p.sp) {
-                            // On top block
-                            if (Y == currentHeight) {
-                                if (world.getBiome(worldX, worldZ).equals(Biome.DESERT)) {
-                                    chunk.setBlock(X, Y, Z, Material.SAND);
-                                } else {
-                                    chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
-
-                                }
-                            // On second to top block
-                            } else if (Y == currentHeight - 1) {
-                                chunk.setBlock(X, Y, Z, Material.DIRT);
-                            // On some other block, for loop ensures within sane y limits
+                for (int Y = currentHeight; Y > p.ah - (noise * 7D - 13D); Y--) {
+                    if (noise > p.sp) {
+                        // On top block
+                        if (Y == currentHeight) {
+                            if (world.getBiome(worldX, worldZ).equals(Biome.DESERT)) {
+                                chunk.setBlock(X, Y, Z, Material.SAND);
                             } else {
-                                chunk.setBlock(X, Y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
+                                chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
+
                             }
+                        // On second to top block
+                        } else if (Y == currentHeight - 1) {
+                            chunk.setBlock(X, Y, Z, Material.DIRT);
+                        // On some other block, for loop ensures within sane y limits
+                        } else {
+                            chunk.setBlock(X, Y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
                         }
                     }
                 }
             }
-        }
-
-        if (world.getEnvironment().equals(Environment.NETHER)) {
-            if (chunkX % 1 == 0 && chunkZ % 1 == 0) {
-                for (int X = 0; X < 16; X++) {
-                    for (int Z = 0; Z < 16; Z++) {
-                        currentHeight = (int) (generator_float.noise(chunkX * 16 + X, chunkZ * 16 + Z, 1.4D, 0.95D) * 7D + 50D);
-                        chunk.setBlock(X, currentHeight, Z, Material.NETHERRACK);
-                        chunk.setBlock(X, currentHeight - 1, Z, Material.NETHERRACK);
-                        for (int i = currentHeight - 2; i > 0; i--)
-                            chunk.setBlock(X, i, Z, new Random().nextBoolean() ? Material.NETHERRACK : new Random().nextBoolean() ? Material.SOUL_SAND : Material.GRAVEL);
-                        chunk.setBlock(X, 0, Z, Material.BEDROCK);
-                    }
-                }
-            }
-
         }
         return chunk;
     }
