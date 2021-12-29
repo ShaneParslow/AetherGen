@@ -27,7 +27,8 @@ public class CustomGen extends ChunkGenerator {
 
     private void init(World world) {
         generator_float = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao);
-        generator_float.setScale(p.sa);
+        //generator_float.setScale(p.sa);
+        generator_float.setScale(0.005);
 
         generator_float_2 = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao2);
         generator_float_2.setScale(p.sa2);
