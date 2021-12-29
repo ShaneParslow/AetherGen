@@ -2,13 +2,12 @@ package com.Logaaan.AetherGen;
 
 import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,7 +23,9 @@ public class CustomGen extends ChunkGenerator {
     }
 
     private void init(World world) {
-        generator_float = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao);
+        // Is this unique for each world created?
+        // In other words, is a CustomGen created for each world created, or only on first startup?
+        generator_float = new SimplexOctaveGenerator(world, p.ao);
         generator_float.setScale(0.005);
         i = true;
     }
@@ -32,7 +33,7 @@ public class CustomGen extends ChunkGenerator {
     @Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
-        return Collections.emptyList();
+        return Arrays.asList((BlockPopulator) new PopulatorOre(p));
     }
 
     @Override

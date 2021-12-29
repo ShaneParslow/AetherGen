@@ -1,9 +1,9 @@
 package com.Logaaan.AetherGen;
 
-import org.bukkit.Chunk;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.LimitedRegion;
+import org.bukkit.generator.WorldInfo;
 
 import java.util.Random;
 
@@ -42,6 +42,10 @@ public class PopulatorOre extends BlockPopulator {
     int gravelchance;
     int gravelsize;
 
+    WorldInfo worldinfo;
+    Random rand;
+    LimitedRegion region;
+
     public PopulatorOre(Main p) {
         this.p = p;
         coal = p.coal;
@@ -76,148 +80,69 @@ public class PopulatorOre extends BlockPopulator {
         gravelsize = p.gravels;
     }
 
+    private boolean is_stone(int x, int y, int z) {
+        Material mat = region.getType(x, y, z);
+        return mat == Material.STONE || mat == Material.COBBLESTONE;
+    }
+
+    private void spawn_ore_vein(Material ore, int size, int x, int y, int z) {
+        region.setType(x, y, z, ore);
+        for (int i = size; i > 0; i--) {
+            int rx = rand.nextInt(2) - 1;
+            int rz = rand.nextInt(2) - 1;
+            int ry = rand.nextInt(2) - 1;
+            if (is_stone(x + rx, y + ry, z + rz)) {
+                region.setType(x + rx, y + ry, z + rz, ore);
+            }
+        }
+    }
+
     @Override
-    public void populate(World arg0, Random arg1, Chunk arg2) {
-        int x, z;
-        x = arg2.getX();
-        z = arg2.getZ();
-        Chunk c = arg2;
-        World w = arg0;
-        for (int xx = 0; xx < 16; xx++) {
-            for (int zz = 0; zz < 16; zz++) {
-                for (int yy = w.getHighestBlockYAt(xx + x * 16, zz + z * 16); yy > 3; yy--) {
-                    if (c.getBlock(xx, yy, zz).getType().equals(Material.STONE) || c.getBlock(xx, yy, zz).getType().equals(Material.COBBLESTONE)) {
-                        if (coal == true) {
-                            if (new Random().nextInt(coalchance) <= 2) {
-                                c.getBlock(xx, yy, zz).setType(Material.COAL_ORE);
-                                for (int i = coalsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.COAL_ORE);
-                                    }
-                                }
-                            }
-                        }
-                        if (iron) {
-                            if (new Random().nextInt(ironchance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.IRON_ORE);
-                                for (int i = ironsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.IRON_ORE);
-                                    }
+    public void populate(WorldInfo w, Random r, int chunkX, int chunkZ, LimitedRegion lr) {
+        // Bounds are not currently checked with lr. This could be a problem. It probably isn't.
+        worldinfo = w;
+        rand = r;
+        region = lr;
 
-                                }
-                            }
-                        }
-                        if (gold) {
-                            if (new Random().nextInt(goldchance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.GOLD_ORE);
-                                for (int i = goldsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.GOLD_ORE);
-                                    }
-                                }
-                            }
-                        }
-                        if (emerald) {
-                            if (new Random().nextInt(emeraldchance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.EMERALD_ORE);
-                                for (int i = emeraldsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.EMERALD_ORE);
-                                    }
+        int worldBaseX = chunkX * 16;
+        int worldBaseZ = chunkZ * 16;
+        for (int X = 0; X < 16; X++) {
+            for (int Z = 0; Z < 16; Z++) {
+                int worldX = worldBaseX + X;
+                int worldZ = worldBaseZ + Z;
 
-                                }
-                            }
+                for (int Y = worldinfo.getMaxHeight() - 20; Y >= worldinfo.getMinHeight() + 20; Y--) {
+                    if (is_stone(worldX, Y, worldZ)) {
+                        if (rand.nextInt(coalchance) <= 2) {
+                            spawn_ore_vein(Material.COAL_ORE, coalsize, worldX, Y, worldZ);
                         }
-
-                        if (red) {
-                            if (new Random().nextInt(redstonechance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.REDSTONE_ORE);
-                                for (int i = redsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.REDSTONE_ORE);
-                                    }
-
-                                }
-                            }
+                        if (rand.nextInt(ironchance) <= 1) {
+                            spawn_ore_vein(Material.IRON_ORE, ironsize, worldX, Y, worldZ);
                         }
-                        if (dia) {
-                            if (new Random().nextInt(diachance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.DIAMOND_ORE);
-                                for (int i = diasize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.DIAMOND_ORE);
-                                    }
-                                }
-                            }
+                        if (rand.nextInt(goldchance) <= 1) {
+                            spawn_ore_vein(Material.GOLD_ORE, goldsize, worldX, Y, worldZ);
                         }
-
-                        if (lapis) {
-                            if (new Random().nextInt(lapischance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.LAPIS_ORE);
-                                for (int i = lapissize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.LAPIS_ORE);
-                                    }
-
-                                }
-                            }
+                        if (rand.nextInt(emeraldchance) <= 1) {
+                            spawn_ore_vein(Material.EMERALD_ORE, emeraldsize, worldX, Y, worldZ);
                         }
-                        if (dirt) {
-                            if (new Random().nextInt(dirtchance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.DIRT);
-                                for (int i = dirtsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.DIRT);
-                                    }
-
-                                }
-                            }
+                        if (rand.nextInt(redstonechance) <= 1) {
+                            spawn_ore_vein(Material.REDSTONE_ORE, redsize, worldX, Y, worldZ);
                         }
-                        if (gravel) {
-                            if (new Random().nextInt(gravelchance) <= 1) {
-                                c.getBlock(xx, yy, zz).setType(Material.GRAVEL);
-                                for (int i = gravelsize; i > 0; i--) {
-                                    int rx = new Random().nextInt(2) - 1;
-                                    int rz = new Random().nextInt(2) - 1;
-                                    int ry = new Random().nextInt(2) - 1;
-                                    if (c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.STONE) || c.getBlock(xx + rx, yy + ry, zz + rz).getType().equals(Material.COBBLESTONE)) {
-                                        c.getBlock(xx + rx, yy + ry, zz + rz).setType(Material.GRAVEL);
-                                    }
-
-                                }
-                            }
+                        if (rand.nextInt(diachance) <= 1) {
+                            spawn_ore_vein(Material.DIAMOND_ORE, diasize, worldX, Y, worldZ);
                         }
-
+                        if (rand.nextInt(lapischance) <= 1) {
+                            spawn_ore_vein(Material.LAPIS_ORE, lapissize, worldX, Y, worldZ);
+                        }
+                        if (rand.nextInt(dirtchance) <= 1) {
+                            spawn_ore_vein(Material.DIRT, dirtsize, worldX, Y, worldZ);
+                        }
+                        if (rand.nextInt(gravelchance) <= 1) {
+                            spawn_ore_vein(Material.GRAVEL, gravelsize, worldX, Y, worldZ);
+                        }
                     }
                 }
             }
         }
-
     }
-
 }
