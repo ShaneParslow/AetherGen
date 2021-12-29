@@ -26,8 +26,8 @@ public class CustomGen extends ChunkGenerator {
     }
 
     private void init(World world) {
-        generator_float = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao);
-        generator_float.setScale(p.sa);
+        generator_float = new SimplexOctaveGenerator(world, p.ao);
+        generator_float.setScale(0.005);
 
         generator_float_2 = new SimplexOctaveGenerator(new Random(world.getSeed()), p.ao2);
         generator_float_2.setScale(p.sa2);
@@ -55,32 +55,15 @@ public class CustomGen extends ChunkGenerator {
         if (world.getEnvironment().equals(Environment.NORMAL)) {
             for (int X = 0; X < 16; X++) {
                 for (int Z = 0; Z < 16; Z++) {
-                    // World coordinate of current block
-                    int worldX = worldBaseX + X;
-                    int worldZ = worldBaseZ + Z;
+                    for (int Y = chunk.getMinHeight(); Y <= chunk.getMaxHeight(); Y++) {
+                        // World coordinate of current block
+                        int worldX = worldBaseX + X;
+                        int worldZ = worldBaseZ + Z;
 
-                    Biome b = world.getBiome(worldX, worldZ);
+                        double noise = generator_float.noise(worldX, worldZ, Y, p.f, p.a, true);
 
-                    double noise = generator_float.noise(worldX, worldZ, p.f, p.a);
-                    currentHeight = (int) (noise * 7D + p.ah);
-
-                    for (int Y = currentHeight; Y > p.ah - (noise * 7D - 13D); Y--) {
-                        if (noise > p.sp) {
-                            // On top block
-                            if (Y == currentHeight) {
-                                if (world.getBiome(worldX, worldZ).equals(Biome.DESERT)) {
-                                    chunk.setBlock(X, Y, Z, Material.SAND);
-                                } else {
-                                    chunk.setBlock(X, Y, Z, Material.GRASS_BLOCK);
-
-                                }
-                            // On second to top block
-                            } else if (Y == currentHeight - 1) {
-                                chunk.setBlock(X, Y, Z, Material.DIRT);
-                            // On some other block, for loop ensures within sane y limits
-                            } else {
-                                chunk.setBlock(X, Y, Z, new Random().nextBoolean() ? Material.COBBLESTONE : Material.STONE);
-                            }
+                        if (noise > 0.3) {
+                            chunk.setBlock(X, Y, Z, Material.COBBLESTONE);
                         }
                     }
                 }
