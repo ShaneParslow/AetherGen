@@ -25,13 +25,12 @@ public class AetherGen extends ChunkGenerator {
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
-        return Arrays.asList((BlockPopulator) new OrePopulator(p));
+        return Arrays.asList(new OrePopulator(p), new StonePopulator());
     }
 
     // Yeah, this basically puts all the world generation in a single function.
-    // I could split it up by making an unordered dynamic queue thing indexed by chunk coords,
+    // I could split it up by making an unordered dynamic queue thing indexed by chunk coordinates,
     // and filling that with the noise. That would be super complicated for no reason though.
-    // TODO: add slight noise to lower island bound, so that it isn't an exact mirror
     // TODO: * 7D can maybe be replaced by changing p.a
     @Override
     public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkGenerator.ChunkData chunkData) {
@@ -71,7 +70,7 @@ public class AetherGen extends ChunkGenerator {
                             chunkData.setBlock(X, Y, Z, Material.DIRT);
                         // On some other block, for loop ensures within sane y limits
                         } else {
-                            chunkData.setBlock(X, Y, Z, random.nextBoolean() ? Material.COBBLESTONE : Material.STONE);
+                            chunkData.setBlock(X, Y, Z, Material.STONE);
                         }
                     }
                 }
