@@ -24,7 +24,6 @@ public class AetherGen extends ChunkGenerator {
 
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
         return Arrays.asList(new OrePopulator(p), new StonePopulator());
     }
 
@@ -78,6 +77,7 @@ public class AetherGen extends ChunkGenerator {
         }
     }
 
+    // Yeah, vanilla cave generation is cool, but ive seen random blocks as a result of biome interaction
     @Override
     public boolean shouldGenerateCaves() {
         return true;

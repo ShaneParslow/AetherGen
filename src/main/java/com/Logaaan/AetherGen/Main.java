@@ -512,7 +512,8 @@ public class Main extends JavaPlugin implements Listener {
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
         return new AetherGen(worldName, this);
     }
-	
+
+    // TODO: Teleport player to overworld when falling into void
 	/*@EventHandler
 	public void onPM(PlayerMoveEvent e) {
 		float yaw = e.getPlayer().getLocation().getYaw();
