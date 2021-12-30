@@ -13,11 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class CustomGen extends ChunkGenerator {
+public class AetherGen extends ChunkGenerator {
     public Main p;
     public String wn;
 
-    public CustomGen(String wn, Main m) {
+    public AetherGen(String wn, Main m) {
         p = m;
         this.wn = wn;
     }
@@ -25,7 +25,7 @@ public class CustomGen extends ChunkGenerator {
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
-        return Arrays.asList((BlockPopulator) new PopulatorOre(p));
+        return Arrays.asList((BlockPopulator) new OrePopulator(p));
     }
 
     // Yeah, this basically puts all the world generation in a single function.

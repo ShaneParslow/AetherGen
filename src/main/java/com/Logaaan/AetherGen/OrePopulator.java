@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-public class PopulatorOre extends BlockPopulator {
+public class OrePopulator extends BlockPopulator {
 
     Main p;
 
@@ -47,7 +47,7 @@ public class PopulatorOre extends BlockPopulator {
     Random rand;
     LimitedRegion region;
 
-    public PopulatorOre(Main p) {
+    public OrePopulator(Main p) {
         this.p = p;
         coal = p.coal;
         iron = p.iron;
@@ -112,6 +112,7 @@ public class PopulatorOre extends BlockPopulator {
                 int worldX = worldBaseX + X;
                 int worldZ = worldBaseZ + Z;
 
+                // THESE BOUNDS ARE A HACK
                 for (int Y = worldinfo.getMaxHeight() - 20; Y >= worldinfo.getMinHeight() + 20; Y--) {
                     if (is_stone(worldX, Y, worldZ)) {
                         if (rand.nextInt(coalchance) <= 2) {

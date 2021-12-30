@@ -510,7 +510,7 @@ public class Main extends JavaPlugin implements Listener {
 
     @Override
     public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
-        return new CustomGen(worldName, this);
+        return new AetherGen(worldName, this);
     }
 	
 	/*@EventHandler
