@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
@@ -98,7 +99,7 @@ public class PopulatorOre extends BlockPopulator {
     }
 
     @Override
-    public void populate(WorldInfo w, Random r, int chunkX, int chunkZ, LimitedRegion lr) {
+    public void populate(@NotNull WorldInfo w, @NotNull Random r, int chunkX, int chunkZ, @NotNull LimitedRegion lr) {
         // Bounds are not currently checked with lr. This could be a problem. It probably isn't.
         worldinfo = w;
         rand = r;

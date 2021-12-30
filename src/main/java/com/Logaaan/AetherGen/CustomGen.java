@@ -6,6 +6,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.util.noise.SimplexOctaveGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,13 +32,13 @@ public class CustomGen extends ChunkGenerator {
     }
 
     @Override
-    public List<BlockPopulator> getDefaultPopulators(World world) {
+    public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
         //return Arrays.asList((BlockPopulator)new TreePopulator(p), (BlockPopulator) new PopulatorCaves2(p), new PopulatorOre(p));
         return Arrays.asList((BlockPopulator) new PopulatorOre(p));
     }
 
     @Override
-    public ChunkData generateChunkData(World world, Random random, int chunkX, int chunkZ, BiomeGrid biome) {
+    public @NotNull ChunkData generateChunkData(@NotNull World world, @NotNull Random random, int chunkX, int chunkZ, @NotNull BiomeGrid biome) {
         if (!i) {
             init(world);
         }
