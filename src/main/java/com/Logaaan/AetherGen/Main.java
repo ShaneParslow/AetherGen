@@ -3,6 +3,7 @@ package com.Logaaan.AetherGen;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 public class Main extends JavaPlugin implements Listener {
 
@@ -480,28 +481,9 @@ public class Main extends JavaPlugin implements Listener {
             dung = getConfig().getInt("dungeon_chance");
         }
         this.getServer().getPluginManager().registerEvents(this, this);
-	
-		/*this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 
-			@Override
-			public void run() {
-				for (Entity e : Items) {
-					if (e.getLocation().getX() > 18) {
-						Location tp = e.getLocation();
-						tp.setX(tp.getX() - 0.4D);
-						e.teleport(tp);
-					}
-					if (e.getLocation().getX() < 16) {
-						Location tp = e.getLocation();
-						tp.setX(tp.getX() + 0.4D);
-						e.teleport(tp);
-					}
-				}
-				
-			}
-			
-			
-		}, 1L, 1L);*/
+        // Timer to teleport players who drop out of aether
+		new TeleportRunnable().runTaskTimer(this, 10L, 10L);
     }
 
     public void onDisable() {
@@ -509,7 +491,7 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     @Override
-    public ChunkGenerator getDefaultWorldGenerator(String worldName, String id) {
+    public ChunkGenerator getDefaultWorldGenerator(@NotNull String worldName, String id) {
         return new AetherGen(worldName, this);
     }
 
