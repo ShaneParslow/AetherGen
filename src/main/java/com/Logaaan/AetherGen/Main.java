@@ -480,10 +480,12 @@ public class Main extends JavaPlugin implements Listener {
         if (this.getConfig().isSet("dungeon_chance")) {
             dung = getConfig().getInt("dungeon_chance");
         }
-        this.getServer().getPluginManager().registerEvents(this, this);
+
+        TeleportRunnable tr = new TeleportRunnable();
+        this.getServer().getPluginManager().registerEvents(tr, this);
 
         // Timer to teleport players who drop out of aether
-		new TeleportRunnable().runTaskTimer(this, 10L, 10L);
+		tr.runTaskTimer(this, 0L, 10L);
     }
 
     public void onDisable() {
