@@ -8,20 +8,13 @@ import org.jetbrains.annotations.NotNull;
 public class Main extends JavaPlugin implements Listener {
 
     public boolean aether;
-    public boolean aether2;
     public boolean goodies;
     public int ao;
-    public int ao2;
     public double sa;
-    public double sa2;
     public int ah = 150;
-    public int ah2 = 100;
     public double sp;
-    public double sp2;
     public double f;
-    public double f2;
     public double a;
-    public double a2;
     public double cave_radius;
     public int cave_rarity;
     public int cave_frequency;
@@ -58,7 +51,6 @@ public class Main extends JavaPlugin implements Listener {
     public int emec;
     public int emes;
     public boolean eme;
-    public boolean fastgen;
     public int bigtree;
     public int pinecount;
     public int normalcount;
@@ -68,7 +60,7 @@ public class Main extends JavaPlugin implements Listener {
     public boolean features;
 
     public void onEnable() {
-        if (this.getConfig().isSet("aether") == false) {
+        if (!this.getConfig().isSet("aether")) {
             this.getConfig().set("aether", true);
             saveConfig();
         }
@@ -348,104 +340,75 @@ public class Main extends JavaPlugin implements Listener {
             saveConfig();
         }
 
-        if (this.getConfig().isSet("cave_rarity") == false) {
+        if (!this.getConfig().isSet("cave_rarity")) {
             this.getConfig().set("cave_rarity", 3);
             saveConfig();
         }
-        if (this.getConfig().isSet("dungeon_chance") == false) {
+        if (!this.getConfig().isSet("dungeon_chance")) {
             this.getConfig().set("dungeon_chance", 10);
             saveConfig();
         }
 
-        if (this.getConfig().isSet("cave_frequency") == false) {
+        if (!this.getConfig().isSet("cave_frequency")) {
             this.getConfig().set("cave_frequency", 35);
             saveConfig();
         }
-        if (this.getConfig().isSet("cave_min_y") == false) {
+        if (!this.getConfig().isSet("cave_min_y")) {
             this.getConfig().set("cave_min_y", 1);
             saveConfig();
         }
-        if (this.getConfig().isSet("cave_max_y") == false) {
+        if (!this.getConfig().isSet("cave_max_y")) {
             this.getConfig().set("cave_max_y", 200);
             saveConfig();
         }
-        if (this.getConfig().isSet("cave_individual_rarity") == false) {
+        if (!this.getConfig().isSet("cave_individual_rarity")) {
             this.getConfig().set("cave_individual_rarity", 20);
             saveConfig();
         }
-        if (this.getConfig().isSet("cave_pocket_chance") == false) {
+        if (!this.getConfig().isSet("cave_pocket_chance")) {
             this.getConfig().set("cave_pocket_chance", 3);
             saveConfig();
         }
-        if (this.getConfig().isSet("cave_radius_multiplier") == false) {
+        if (!this.getConfig().isSet("cave_radius_multiplier")) {
             this.getConfig().set("cave_radius_multiplier", 1.1);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_2") == false) {
-            this.getConfig().set("aether_2", false);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("aether_goodies") == false) {
+        if (!this.getConfig().isSet("aether_goodies")) {
             this.getConfig().set("aether_goodies", false);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_height") == false) {
+        if (!this.getConfig().isSet("aether_height")) {
             this.getConfig().set("aether_height", 150);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_spawnrate") == false) {
+        if (!this.getConfig().isSet("aether_spawnrate")) {
             this.getConfig().set("aether_spawnrate", 0.1);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_2_spawnrate") == false) {
-            this.getConfig().set("aether_2_spawnrate", 0.3);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("aether_frequency") == false) {
+        if (!this.getConfig().isSet("aether_frequency")) {
             this.getConfig().set("aether_frequency", 1.45D);
             saveConfig();
         }
 
-        if (this.getConfig().isSet("aether_2_frequency") == false) {
-            this.getConfig().set("aether_2_frequency", 1.45D);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("aether_amplitude") == false) {
+        if (!this.getConfig().isSet("aether_amplitude")) {
             this.getConfig().set("aether_amplitude", 0.95D);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_2_amplitude") == false) {
-            this.getConfig().set("aether_2_amplitude", 0.95D);
-            saveConfig();
-        }
-
-        if (this.getConfig().isSet("aether_octaves") == false) {
+        if (!this.getConfig().isSet("aether_octaves")) {
             this.getConfig().set("aether_octaves", 7);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_2_octaves") == false) {
-            this.getConfig().set("aether_2_octaves", 8);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("aether_scale") == false) {
+        if (!this.getConfig().isSet("aether_scale")) {
             this.getConfig().set("aether_scale", 0.0337);
             saveConfig();
         }
-        if (this.getConfig().isSet("aether_2_scale") == false) {
-            this.getConfig().set("aether_2_scale", 0.0367);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("aether_2_height") == false) {
-            this.getConfig().set("aether_2_height", 100);
-            saveConfig();
-        }
-        if (this.getConfig().isSet("general_tree_chance") == false) {
+        if (!this.getConfig().isSet("general_tree_chance")) {
             this.getConfig().set("general_tree_chance", 50);
             saveConfig();
         } else {
             this.treechance = this.getConfig().getInt("general_tree_chance");
         }
-        if (this.getConfig().getBoolean("aether") == true) {
+        if (this.getConfig().getBoolean("aether")) {
             aether = true;
             ah = this.getConfig().getInt("aether_height");
             goodies = this.getConfig().getBoolean("aether_gooies");
@@ -456,17 +419,6 @@ public class Main extends JavaPlugin implements Listener {
             a = this.getConfig().getDouble("aether_amplitude");
         } else {
             aether = false;
-        }
-        if (this.getConfig().getBoolean("aether_2") == true) {
-            aether2 = true;
-            ah2 = this.getConfig().getInt("aether_2_height");
-            ao2 = this.getConfig().getInt("aether_2_octaves");
-            sa2 = this.getConfig().getDouble("aether_2_scale");
-            sp2 = this.getConfig().getDouble("aether_2_spawnrate");
-            f2 = this.getConfig().getDouble("aether_2_frequency");
-            a2 = this.getConfig().getDouble("aether_2_amplitude");
-        } else {
-            aether2 = false;
         }
         if (this.getConfig().isSet("cave_rarity")) {
             cave_rarity = getConfig().getInt("cave_rarity");
