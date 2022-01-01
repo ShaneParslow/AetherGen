@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Random;
-
+/*
 public class TreePopulator extends BlockPopulator {
 
     public Main p;
@@ -47,7 +47,7 @@ public class TreePopulator extends BlockPopulator {
                     for (int z = 0; z < 16; z++) {
                         int xx = chunk.getX() * 16 + x;
                         int zz = chunk.getZ() * 16 + z;
-                        int ii = p.ah;
+                        int ii = Config.aether_height;
                         if (new Random().nextInt(34000 * p.dung) < 2) {
                             if (chunk.getBlock(x, ii, z).getType().equals(Material.AIR)) {
                                 paste(world, xx, ii, zz, "dungeon1");
@@ -491,3 +491,4 @@ public class TreePopulator extends BlockPopulator {
         Operation op = holder.createPaste(es).to(v).build();
     }
 }
+*/

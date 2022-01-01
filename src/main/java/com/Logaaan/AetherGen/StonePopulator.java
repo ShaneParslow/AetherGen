@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
+// I think that all of this can be put into OrePopulator
 public class StonePopulator extends BlockPopulator {
     @Override
     public void populate(@NotNull WorldInfo w_info, @NotNull Random r, int chunkX, int chunkZ, @NotNull LimitedRegion lr) {
