@@ -14,17 +14,9 @@ import java.util.List;
 import java.util.Random;
 
 public class AetherGen extends ChunkGenerator {
-    public Main p;
-    public String wn;
-
-    public AetherGen(String wn, Main m) {
-        p = m;
-        this.wn = wn;
-    }
-
     @Override
     public @NotNull List<BlockPopulator> getDefaultPopulators(@NotNull World world) {
-        return Arrays.asList(new OrePopulator(p), new StonePopulator());
+        return Arrays.asList(new OrePopulator(), new StonePopulator());
     }
 
     // Yeah, this basically puts all the world generation in a single function.
@@ -33,8 +25,8 @@ public class AetherGen extends ChunkGenerator {
     // TODO: * 7D can maybe be replaced by changing p.a
     @Override
     public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkGenerator.ChunkData chunkData) {
-        SimplexOctaveGenerator gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), p.ao);
-        SimplexOctaveGenerator lower_gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed() + 1), p.ao);
+        SimplexOctaveGenerator gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), Config.aether_octaves);
+        SimplexOctaveGenerator lower_gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed() + 1), Config.aether_octaves);
         // This can potentially be eliminated by changing generator frequency
         gen.setScale(0.005);
         lower_gen.setScale(0.005);
@@ -47,16 +39,16 @@ public class AetherGen extends ChunkGenerator {
                 int worldX = worldBaseX + X;
                 int worldZ = worldBaseZ + Z;
 
-                double noise = gen.noise(worldX, worldZ, p.f, p.a);
-                int currentHeight = (int) (noise * 7D + p.ah);
+                double noise = gen.noise(worldX, worldZ, Config.aether_frequency, Config.aether_amplitude);
+                int currentHeight = (int) (noise * 7D + Config.aether_height);
                 // A small offset to the lower bound of islands, in order to make sure they are not perfectly mirrored.
-                double offset_noise = lower_gen.noise(worldX, worldZ, p.f, p.a);
+                double offset_noise = lower_gen.noise(worldX, worldZ, Config.aether_frequency, Config.aether_amplitude);
                 int lower_offset = (int) (offset_noise * 7D);
-                int lower_y = (int) (p.ah - (noise * 7D - 13D) + lower_offset);
+                int lower_y = (int) (Config.aether_height - (noise * 7D - 13D) + lower_offset);
 
                 for (int Y = currentHeight; Y > lower_y; Y--) {
                     Biome biome = chunkData.getBiome(X, Y, Z);
-                    if (noise > p.sp) {
+                    if (noise > Config.aether_spawn_rate) {
                         // On top block
                         if (Y == currentHeight) {
                             if (biome.equals(Biome.DESERT)) {

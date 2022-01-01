@@ -10,75 +10,11 @@ import java.util.Random;
 
 public class OrePopulator extends BlockPopulator {
 
-    Main p;
-
-    boolean coal;
-    boolean iron;
-    boolean gold;
-    boolean dia;
-    boolean red;
-    boolean lapis;
-    boolean dirt;
-    boolean gravel;
-    boolean emerald;
-
-
-    int coalchance;
-    int coalsize;
-    int ironchance;
-    int ironsize;
-    int goldchance;
-    int goldsize;
-    int emeraldchance;
-    int emeraldsize;
-    int lapischance;
-    int lapissize;
-    int diachance;
-    int diasize;
-    int redstonechance;
-    int redsize;
-
-    int dirtchance;
-    int dirtsize;
-    int gravelchance;
-    int gravelsize;
-
     WorldInfo worldinfo;
     Random rand;
     LimitedRegion region;
 
-    public OrePopulator(Main p) {
-        this.p = p;
-        coal = p.coal;
-        iron = p.iron;
-        gold = p.gold;
-        dia = p.dia;
-        red = p.red;
-        lapis = p.lapis;
-        dirt = p.dirt;
-        gravel = p.gravel;
-        emerald = p.eme;
-
-
-        coalchance = p.coalc;
-        coalsize = p.coals;
-        ironchance = p.ironc;
-        ironsize = p.irons;
-        goldchance = p.goldc;
-        goldsize = p.golds;
-        emeraldchance = p.emec;
-        emeraldsize = p.emes;
-        lapischance = p.lapisc;
-        lapissize = p.lapiss;
-        diachance = p.diac;
-        diasize = p.dias;
-        redstonechance = p.redc;
-        redsize = p.reds;
-
-        dirtchance = p.dirtc;
-        dirtsize = p.dirts;
-        gravelchance = p.gravelc;
-        gravelsize = p.gravels;
+    public OrePopulator() {
     }
 
     private boolean is_stone(int x, int y, int z) {
@@ -115,32 +51,32 @@ public class OrePopulator extends BlockPopulator {
                 // THESE BOUNDS ARE A HACK
                 for (int Y = worldinfo.getMaxHeight() - 20; Y >= worldinfo.getMinHeight() + 20; Y--) {
                     if (is_stone(worldX, Y, worldZ)) {
-                        if (rand.nextInt(coalchance) <= 2) {
-                            spawn_ore_vein(Material.COAL_ORE, coalsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.coal_chance) == 1) {
+                            spawn_ore_vein(Material.COAL_ORE, Config.coal_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(ironchance) <= 1) {
-                            spawn_ore_vein(Material.IRON_ORE, ironsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.iron_chance) == 1) {
+                            spawn_ore_vein(Material.IRON_ORE, Config.iron_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(goldchance) <= 1) {
-                            spawn_ore_vein(Material.GOLD_ORE, goldsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.gold_chance) == 1) {
+                            spawn_ore_vein(Material.GOLD_ORE, Config.gold_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(emeraldchance) <= 1) {
-                            spawn_ore_vein(Material.EMERALD_ORE, emeraldsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.lapis_chance) == 1) {
+                            spawn_ore_vein(Material.LAPIS_ORE, Config.lapis_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(redstonechance) <= 1) {
-                            spawn_ore_vein(Material.REDSTONE_ORE, redsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.redstone_chance) == 1) {
+                            spawn_ore_vein(Material.REDSTONE_ORE, Config.redstone_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(diachance) <= 1) {
-                            spawn_ore_vein(Material.DIAMOND_ORE, diasize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.diamond_chance) == 1) {
+                            spawn_ore_vein(Material.DIAMOND_ORE, Config.diamond_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(lapischance) <= 1) {
-                            spawn_ore_vein(Material.LAPIS_ORE, lapissize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.emerald_chance) == 1) {
+                            spawn_ore_vein(Material.EMERALD_ORE, Config.emerald_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(dirtchance) <= 1) {
-                            spawn_ore_vein(Material.DIRT, dirtsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.dirt_chance) == 1) {
+                            spawn_ore_vein(Material.DIRT, Config.dirt_size, worldX, Y, worldZ);
                         }
-                        if (rand.nextInt(gravelchance) <= 1) {
-                            spawn_ore_vein(Material.GRAVEL, gravelsize, worldX, Y, worldZ);
+                        if (rand.nextInt(Config.gravel_chance) == 1) {
+                            spawn_ore_vein(Material.GRAVEL, Config.gravel_size, worldX, Y, worldZ);
                         }
                     }
                 }
