@@ -34,7 +34,7 @@ public class AetherGen extends ChunkGenerator {
     @Override
     public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkGenerator.ChunkData chunkData) {
         SimplexOctaveGenerator gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()), p.ao);
-        SimplexOctaveGenerator lower_gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed()+1), p.ao);
+        SimplexOctaveGenerator lower_gen = new SimplexOctaveGenerator(new Random(worldInfo.getSeed() + 1), p.ao);
         // This can potentially be eliminated by changing generator frequency
         gen.setScale(0.005);
         lower_gen.setScale(0.005);
