@@ -1,23 +1,19 @@
 package com.Logaaan.AetherGen;
 
-import java.util.Random;
-
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.generator.BlockPopulator;
 
+import java.util.Random;
+
 /**
  * author: Angelic47
  * Nukkit Project
  */
+
+/*
 public class PopulatorCaves2 extends BlockPopulator {
-
-    protected int checkAreaSize = 8;
-
-    private Random random;
-    
-    Main p;
 
     public static int caveRarity = 4;//7
     public static int caveFrequency = 40;//40
@@ -30,19 +26,25 @@ public class PopulatorCaves2 extends BlockPopulator {
     public static int caveSystemPocketMaxSize = 4;
     public static boolean evenCaveDistribution = false;
     public static double radiusMultiplier = 1;
-    
+    public int worldHeightCap = 240;
+    protected int checkAreaSize = 8;
+    Main p;
+    private Random random;
+
     public PopulatorCaves2(Main p) {
-    	this.p = p;
-    	this.caveRarity = p.cave_rarity;
-    	this.caveFrequency = p.cave_frequency;
-    	this.caveMinAltitude = p.cave_min;
-    	this.caveMaxAltitude = p.cave_max;
-    	this.caveSystemPocketChance = p.cave_pocket_chance;
-    	this.individualCaveRarity = p.cave_individual_rarity;
-    	this.radiusMultiplier = p.cave_radius;
+        this.p = p;
+        caveRarity = p.cave_rarity;
+        caveFrequency = p.cave_frequency;
+        caveMinAltitude = p.cave_min;
+        caveMaxAltitude = p.cave_max;
+        caveSystemPocketChance = p.cave_pocket_chance;
+        individualCaveRarity = p.cave_individual_rarity;
+        radiusMultiplier = p.cave_radius;
     }
 
-    public int worldHeightCap = 240;
+    public static int numberInRange(Random random, int min, int max) {
+        return min + random.nextInt(max - min + 1);
+    }
 
     @Override
     public void populate(World level, Random random, Chunk chunk) {
@@ -70,7 +72,7 @@ public class PopulatorCaves2 extends BlockPopulator {
     protected void generateCaveNode(long seed, Chunk chunk, double x, double y, double z, float radius, float angelOffset, float angel, int angle, int maxAngle, double scale) {
         int chunkX = chunk.getX();
         int chunkZ = chunk.getZ();
-        
+
         radius = (float) (radius * radiusMultiplier);
 
         double realX = chunkX * 16 + 8;
@@ -198,7 +200,7 @@ public class PopulatorCaves2 extends BlockPopulator {
                             double modY = ((yy - 1) + 0.5D - y) / offsetY;
                             if ((modY > -0.7D) && (modX * modX + modY * modY + modZ * modZ < 1.0D)) {
 
-                                int material = chunk.getBlock(xx, yy, zz).getTypeId();;
+                                int material = chunk.getBlock(xx, yy, zz).getTypeId();
                                 int materialAbove = chunk.getBlock(xx, yy + 1, zz).getTypeId();
                                 if (material == Material.GRASS.getId() || material == Material.MYCEL.getId()) {
                                     grassFound = true;
@@ -207,9 +209,9 @@ public class PopulatorCaves2 extends BlockPopulator {
 //								if (this.isSuitableBlock(material, materialAbove, biome))
                                 {
                                     if (yy - 1 < 10) {
-                                    	chunk.getBlock(xx, yy , zz).setType(Material.AIR);
+                                        chunk.getBlock(xx, yy, zz).setType(Material.AIR);
                                     } else {
-                                    	chunk.getBlock(xx, yy, zz).setType(Material.AIR);
+                                        chunk.getBlock(xx, yy, zz).setType(Material.AIR);
 
                                         // If grass was just deleted, try to
                                         // move it down
@@ -269,9 +271,4 @@ public class PopulatorCaves2 extends BlockPopulator {
             }
         }
     }
-
-    public static int numberInRange(Random random, int min, int max) {
-        return min + random.nextInt(max - min + 1);
-    }
-}
-
+} */
