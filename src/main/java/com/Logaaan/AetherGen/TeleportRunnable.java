@@ -4,12 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.ArrayList;
 
 // This Runnable teleports players in aether worlds to "world" or the string provided in the constructor when they fall
 // out of the aether.
