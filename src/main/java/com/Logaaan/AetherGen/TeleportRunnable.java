@@ -1,5 +1,6 @@
 package com.Logaaan.AetherGen;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -13,7 +14,6 @@ import java.util.ArrayList;
 // This Runnable teleports players in aether worlds to "world" or the string provided in the constructor when they fall
 // out of the aether.
 public class TeleportRunnable extends BukkitRunnable implements Listener {
-    private final ArrayList<World> aether_worlds = new ArrayList<>();
     private final String tp_world_name;
     private World tp_world;
 
@@ -27,6 +27,9 @@ public class TeleportRunnable extends BukkitRunnable implements Listener {
 
     // Teleport players if beneath Y level
     private void check_players(World w) {
+        if (w == null) {
+            return;
+        }
         for (Player p : w.getPlayers()) {
             if (p.getLocation().getY() < 70) {
                 tp_player(p);
@@ -43,27 +46,14 @@ public class TeleportRunnable extends BukkitRunnable implements Listener {
 
     @Override
     public void run() {
-        // This is to handle the case where the Runnable is run before the worlds are loaded,
-        // but that doesn't seem to happen.
-        if (tp_world == null) {
-            return;
-        }
-        for (World world : aether_worlds) {
-            check_players(world);
-        }
-    }
-
-    @EventHandler
-    private void world_load_handler(WorldLoadEvent event) {
-        World world = event.getWorld();
-        // Watch for tp world, and save it
-        if (world.getName().equals(tp_world_name)) {
-            tp_world = world;
-        }
-        // Make a list of aether worlds to run this Runnable on
-        // This is maybe better than making an api call and iterating on each run()
-        if (world.getGenerator() instanceof AetherGen) {
-            aether_worlds.add(world);
+        for (World world : Bukkit.getWorlds()) {
+            // Keep an eye out for the world we want to tp to
+            if (tp_world == null && world.getName().equals(tp_world_name)) {
+                tp_world = world;
+            }
+            if (world.getGenerator() instanceof AetherGen) {
+                check_players(world);
+            }
         }
     }
 }

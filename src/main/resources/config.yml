@@ -1,5 +1,5 @@
 # General generation #
-aether_height: 60
+aether_height: 220
 aether_spawnrate: 0.2      # Noise threshold for generation
 aether_frequency: 1.45     # Frequency of hills and valleys
 aether_amplitude: 0.8421   # Height of hills and valleys
