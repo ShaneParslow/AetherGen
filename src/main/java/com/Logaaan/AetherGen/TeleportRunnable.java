@@ -44,6 +44,7 @@ public class TeleportRunnable extends BukkitRunnable implements Listener {
     public void run() {
         for (World world : Bukkit.getWorlds()) {
             // Keep an eye out for the world we want to tp to
+            // We don't know exactly when the world will become available
             if (tp_world == null && world.getName().equals(tp_world_name)) {
                 tp_world = world;
             }

@@ -15,7 +15,8 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     public void onDisable() {
-
+        // Is there anything that we need to clean up?
+        // Can we just drop that timer?
     }
 
     @Override
