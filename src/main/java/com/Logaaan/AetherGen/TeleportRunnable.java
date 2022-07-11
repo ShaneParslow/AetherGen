@@ -3,11 +3,12 @@ package com.Logaaan.AetherGen;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-// This Runnable teleports players in aether worlds to "world" or the string provided in the constructor when they fall
+// This Runnable teleports entities in aether worlds to "world" or the string provided in the constructor when they fall
 // out of the aether.
 public class TeleportRunnable extends BukkitRunnable implements Listener {
     private final String tp_world_name;
@@ -22,22 +23,22 @@ public class TeleportRunnable extends BukkitRunnable implements Listener {
     }
 
     // Teleport players if beneath Y level
-    private void check_players(World w) {
+    private void check_entities(World w) {
         if (w == null) {
             return;
         }
-        for (Player p : w.getPlayers()) {
-            if (p.getLocation().getY() < 70) {
-                tp_player(p);
+        for (Entity e : w.getEntities()) {
+            if (e.getLocation().getY() < 70) {
+                tp_entity(e);
             }
         }
     }
 
-    private void tp_player(Player p) {
-        Location tp = p.getLocation();
+    private void tp_entity(Entity e) {
+        Location tp = e.getLocation();
         tp.setWorld(tp_world);
         tp.setY(tp_world.getMaxHeight());
-        p.teleport(tp);
+        e.teleport(tp);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class TeleportRunnable extends BukkitRunnable implements Listener {
                 tp_world = world;
             }
             if (world.getGenerator() instanceof AetherGen) {
-                check_players(world);
+                check_entities(world);
             }
         }
     }
